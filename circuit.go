@@ -147,15 +147,15 @@ func (ct *Circuit) runCmd(text string, r runner) bool {
 }
 
 func (ct *Circuit) runGetCmd(cmd getCmd, r runner) {
-	output := ct.outputs[cmd.name]
-	if output == nil {
+	output, exists := ct.outputs[cmd.name]
+	if !exists {
 		r.respond("output doesn't exist")
 		return
 	}
 
 	value, err := output.value()
 	if err != nil {
-		r.respond(err.Error())
+		r.respond(fmt.Sprintf("error getting output value: %v", err))
 		return
 	}
 
@@ -163,15 +163,15 @@ func (ct *Circuit) runGetCmd(cmd getCmd, r runner) {
 }
 
 func (ct *Circuit) runSetCmd(cmd setCmd, r runner) {
-	input := ct.inputs[cmd.name]
-	if input == nil {
+	input, exists := ct.inputs[cmd.name]
+	if !exists {
 		r.respond("input doesn't exist")
 		return
 	}
 
 	values, err := input.parse(cmd.value)
 	if err != nil {
-		r.respond(err.Error())
+		r.respond(fmt.Sprintf("error parsing input value: %v", err))
 		return
 	}
 

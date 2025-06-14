@@ -5,8 +5,9 @@ type emitter[T any] struct {
 }
 
 func newEmitter[T any]() *emitter[T] {
-	listeners := make([]func(T), 0)
-	return &emitter[T]{listeners}
+	return &emitter[T]{
+		listeners: make([]func(T), 0),
+	}
 }
 
 func (e *emitter[T]) on(listener func(T)) {
